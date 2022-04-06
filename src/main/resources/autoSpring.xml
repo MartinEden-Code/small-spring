@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	         http://www.springframework.org/schema/beans/spring-beans.xsd
+		 http://www.springframework.org/schema/context">
+
+
+    <!--配置文件值解析器，此配置文件字符解析器不好放入ClassPathBeanDefinitionScanner中自动配置，因为有location属性配置，需要手动配置-->
+    <bean class="cn.bugstack.springframework.beans.factory.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:token.properties"/>
+    </bean>
+
+    <!--注解融入bean生命周期核心实现类(todo 如何将其自动配置，不用放在bean中？ 在ClassPathBeanDefinitionScanner类中添加一个注册方法，将此类放入beanFactory中-->
+    <!--<bean class="cn.bugstack.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>-->
+
+    <!--和spring.xml相比，自动属性注入-->
+    <context:component-scan base-package="cn.bugstack.springframework.test.bean"/>
+
+</beans>

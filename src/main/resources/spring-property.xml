@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	         http://www.springframework.org/schema/beans/spring-beans.xsd
+		 http://www.springframework.org/schema/context">
+
+    <!--指定资源文件值-->
+    <bean class="cn.bugstack.springframework.beans.factory.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:token.properties"/>
+    </bean>
+
+    <!--从资源文件中获取 key为token的值，赋值给useService中的token属性-->
+    <bean id="userService" class="cn.bugstack.springframework.test.bean.UserService">
+        <property name="token" value="${token}"/>
+    </bean>
+
+</beans>

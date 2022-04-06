@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <!--和autospring.xml相比，缺少自动属性注入，需手动注入bean属性-->
+
+    <bean id="userService" class="cn.bugstack.springframework.test.bean.UserService" scope="singleton">
+        <property name="uId" value="10001"/>
+        <property name="company" value="腾讯"/>
+        <property name="location" value="深圳"/>
+        <property name="userDao" ref="userDao"/>
+        <property name="iUserDao" ref="proxyUserDao"/>
+    </bean>
+
+    <bean id="userDao" class="cn.bugstack.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod"/>
+
+    <bean id="proxyUserDao" class="cn.bugstack.springframework.test.bean.ProxyBeanFactory"/>
+
+    <!--    自定义监听器实例-->
+    <bean class="cn.bugstack.springframework.test.event.ContextRefreshedEventListener"/>
+
+    <bean class="cn.bugstack.springframework.test.event.CustomEventListener"/>
+
+    <bean class="cn.bugstack.springframework.test.event.ContextClosedEventListener"/>
+
+    <!--AOP动态代理-->
+
+    <!--动态代理核心实现类-->
+    <bean class="cn.bugstack.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+    <!--前置切面-->
+    <bean id="beforeAdvice" class="cn.bugstack.springframework.test.bean.UserServiceBeforeAdvice"/>
+
+    <bean id="methodBeforeAdviceInterceptor" class="cn.bugstack.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor">
+        <property name="advice" ref="beforeAdvice"/>
+    </bean>
+
+    <!--后置切面-->
+    <bean id="afterAdvice" class="cn.bugstack.springframework.test.bean.UserServiceAfterAdvice"/>
+
+    <bean id="methodAfterAdviceInterceptor" class="cn.bugstack.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor">
+        <property name="advice" ref="afterAdvice"/>
+    </bean>
+
+    <!--动态代理包装器-->
+    <bean id="pointcutAdvisor" class="cn.bugstack.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+        <property name="expression" value="execution(* cn.bugstack.springframework.test.bean.IUserService.*(..))"/>
+        <property name="beforeadvice" ref="methodBeforeAdviceInterceptor"/>
+        <property name="afteradvice" ref="methodAfterAdviceInterceptor"/>
+    </bean>
+
+
+</beans>
