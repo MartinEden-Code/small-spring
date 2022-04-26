@@ -3,13 +3,13 @@ package cn.bugstack.springframework.test;
 import cn.bugstack.springframework.beans.PropertyValue;
 import cn.bugstack.springframework.beans.PropertyValues;
 import cn.bugstack.springframework.beans.context.support.ClassPathXmlApplicationContext;
+import cn.bugstack.springframework.beans.factory.BeanFactory;
 import cn.bugstack.springframework.beans.factory.config.BeanDefinition;
 import cn.bugstack.springframework.beans.factory.config.BeanReference;
+import cn.bugstack.springframework.beans.factory.config.FactoryBean;
 import cn.bugstack.springframework.beans.factory.support.DefaultListableBeanFactory;
 import cn.bugstack.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import cn.bugstack.springframework.test.bean.AdminService;
-import cn.bugstack.springframework.test.bean.UserDao;
-import cn.bugstack.springframework.test.bean.UserService;
+import cn.bugstack.springframework.test.bean.*;
 import cn.bugstack.springframework.test.common.MyBeanFactoryPostProcessor;
 import cn.bugstack.springframework.test.common.MyBeanPostProcessor;
 import cn.bugstack.springframework.test.event.CustomEvent;
@@ -183,9 +183,9 @@ public class IocTest {
      * 单例和原型区别（非单例singleton类型的bean不执行销毁方法）
      */
     @Test
-    public void test_prototype(){
+    public void test_prototype() throws Exception {
 
-        // 1.初始化 BeanFactory
+        /*// 1.初始化 BeanFactory
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
         applicationContext.registerShutdownHook();
 
@@ -198,7 +198,27 @@ public class IocTest {
         System.out.println(userService02);
 
         // 4. 打印十六进制哈希
-        System.out.println(userService01 + " 十六进制哈希： " + Integer.toHexString(userService01.hashCode()));
+        System.out.println(userService01 + " 十六进制哈希： " + Integer.toHexString(userService01.hashCode()));*/
+
+
+        //测试beanFatory和FactoryBean
+        BeanFactory beanFactory  = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        Person person = (Person) beanFactory.getBean("demo");
+        System.out.println(person);
+
+        //demoFromFactory 实现了FactoryBean接口
+        Person demoFromFactory = beanFactory.getBean("demoFromFactory",Person.class);
+        System.out.println(demoFromFactory);
+
+        //获取对应的personFactory
+        //PersonFactoryBean factoryBean = beanFactory.getBean("demoFromFactory",PersonFactoryBean.class);
+        //如果beanName不加&则获取到对应bean的实例;如果beanName加上&，则获取到BeanFactory本身的实例
+        //这里+&会获取失败，因为自己写的beanFactroy功能没有实现完全,
+        PersonFactoryBean factoryBean = (PersonFactoryBean) beanFactory.getBean("&demoFromFactory");
+        System.out.println(factoryBean);
+        //System.out.println("初始化参数为："+factoryBean.getInitStr());
+
+
     }
 
     @Test
@@ -228,12 +248,21 @@ public class IocTest {
 
 
     //todo 问题1. 实例化和初始化区别，分别在代码哪一步
+
+
     //问题2. beanFactory 和 FactoryBean区别
+    //BeanFactory:负责生产和管理Bean的一个工厂接口，提供一个Spring Ioc容器规范,
+    //FactoryBean: 一种Bean创建的一种方式，对Bean的一种扩展。对于复杂的Bean对象初始化创建使用其可封装对象的创建细节。
+    //BeanFactory是个Factory，也就是IOC容器或对象工厂，而FactoryBean就是个Bean。但对FactoryBean而言，这个Bean不是简单的Bean，而是一个能生产或者修饰对象生成的工厂Bean
+    //  FactoryBean接口：它是一个可以返回bean的实例的工厂bean，实现这个接口可以对bean进行一些额外的操作，例如根据不同的配置类型返回不同类型的bean，简化xml配置等。
+    //  在某些情况下，对于实例Bean对象比较复杂的情况下，使用传统方式创建bean会比较复杂，例如（使用xml配置），这样就出现了FactoryBean接口，可以让用户通过实现该接口来自定义该Bean接口的实例化过程。
+    //  即包装一层，将复杂的初始化过程包装，让调用者无需关系具体实现细节。
+
+
+
     //问题3. beanFactoryPostProcessor 和 beanPostProcessor 分别的作用和区别
+
     //重点关注 上下文的 reflush 方法、实例化类AbstractAutowireCapbleBeanFactory 注册、实例化、初始化bean对象
-
-
-
     // BeanFactoryPostProcessor 在所有的 BeanDefinition 加载完成后，实例化 Bean 对象之前，提供修改 BeanDefinition 属性的机制
 
 

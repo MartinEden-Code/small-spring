@@ -95,26 +95,31 @@ public abstract class AbstractApplicationContext extends DefaultRecourceLoader i
     }
 
 
+    @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
         return getBeanFactory().getBeansOfType(type);
     }
 
 
+    @Override
     public String[] getBeanDefinitionNames() {
         return getBeanFactory().getBeanDefinitionNames();
     }
 
 
+    @Override
     public Object getBean(String name) throws BeansException {
         return getBeanFactory().getBean(name);
     }
 
 
+    @Override
     public Object getBean(String name, Object... args) throws BeansException {
         return getBeanFactory().getBean(name, args);
     }
 
 
+    @Override
     public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
         return getBeanFactory().getBean(name, requiredType);
     }

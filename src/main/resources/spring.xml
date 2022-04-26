@@ -48,5 +48,15 @@
         <property name="afteradvice" ref="methodAfterAdviceInterceptor"/>
     </bean>
 
+    <!--对比测试factoryBean 和beanFatory-->
+    <bean id="demo" class="cn.bugstack.springframework.test.bean.Person">
+        <property name="age" value="10"/>
+        <property name="name" value="xiaoMing"/>
+    </bean>
+
+    <bean id="demoFromFactory" class="cn.bugstack.springframework.test.bean.PersonFactoryBean">
+        <property name="initStr" value="10,init from factory"/>
+    </bean>
+
 
 </beans>
